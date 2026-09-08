@@ -233,6 +233,17 @@ namespace TheOtherRoles {
 
         }
 
+        public bool isHiddenByParentChain() {
+            // helper function for checking hidden status up to option root
+            CustomOption current = this;
+            while (current.parent != null) {
+                if (!current.invertedParent && current.parent.selection == 0) return true;
+                if (current.invertedParent && current.parent.selection != 0) return true;
+                current = current.parent;
+            }
+            return false;
+        }
+
         public static byte[] serializeOptions() {
             using (MemoryStream memoryStream = new MemoryStream()) {
                 using (BinaryWriter binaryWriter = new BinaryWriter(memoryStream)) {
@@ -500,7 +511,7 @@ namespace TheOtherRoles {
                     __instance.settingsInfo.Add(categoryHeaderMasked.gameObject);
                     num -= 1.05f;
                     i = 0;
-                } else if (option.parent != null && (option.parent.selection == 0 || option.parent.parent != null && option.parent.parent.selection == 0)) continue;  // Hides options, for which the parent is disabled!
+                } else if (option.isHiddenByParentChain()) continue;  // Hides options, for which the parent is disabled!
                 if (option == CustomOptionHolder.crewmateRolesCountMax || option == CustomOptionHolder.neutralRolesCountMax || option == CustomOptionHolder.impostorRolesCountMax || option == CustomOptionHolder.modifiersCountMax || option == CustomOptionHolder.crewmateRolesFill)
                     continue;
 
@@ -722,7 +733,7 @@ namespace TheOtherRoles {
                     categoryHeaderMasked.transform.localScale = Vector3.one * 0.63f;
                     categoryHeaderMasked.transform.localPosition = new Vector3(-0.903f, num, -2f);
                     num -= 0.63f;
-                } else if (option.parent != null && (option.parent.selection == 0 && !option.invertedParent || option.parent.parent != null && option.parent.parent.selection == 0 && !option.parent.invertedParent)) continue;  // Hides options, for which the parent is disabled!
+                } else if (option.isHiddenByParentChain()) continue;  // Hides options, for which the parent is disabled!
                 else if (option.parent != null && option.parent.selection != 0 && option.invertedParent) continue;
                 OptionBehaviour optionBehaviour = UnityEngine.Object.Instantiate<StringOption>(menu.stringOptionOrigin, Vector3.zero, Quaternion.identity, menu.settingsContainer);
                 optionBehaviour.transform.localPosition = new Vector3(0.952f, num, -2f);
@@ -1015,7 +1026,7 @@ namespace TheOtherRoles {
                 if (TORMapOptions.gameMode == CustomGamemodes.HideNSeek && option.type != CustomOptionType.HideNSeekMain && option.type != CustomOptionType.HideNSeekRoles) continue;
                 if (TORMapOptions.gameMode == CustomGamemodes.PropHunt && option.type != CustomOptionType.PropHunt) continue;
                 if (option.parent != null) {
-                    bool isIrrelevant = (option.parent.getSelection() == 0 && !option.invertedParent) || (option.parent.parent != null && option.parent.parent.getSelection() == 0 && !option.parent.invertedParent);
+                    bool isIrrelevant = option.isHiddenByParentChain();
 
                     Color c = isIrrelevant ? Color.grey : Color.white;  // No use for now
                     if (isIrrelevant) continue;
