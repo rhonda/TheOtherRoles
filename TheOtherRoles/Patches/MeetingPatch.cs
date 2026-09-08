@@ -749,6 +749,7 @@ namespace TheOtherRoles.Patches {
                                     output += "- " + RoleInfo.GetRolesString(p, false, false, true) + ", was last seen " + roomName + "\n";
                                 }
                                 FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(Snitch.snitch, $"{output}");
+                                Snitch.playerRoomMap = new Dictionary<byte, byte>();
                             }
                         })));
                     }
@@ -757,7 +758,6 @@ namespace TheOtherRoles.Patches {
                 if (PlayerControl.LocalPlayer.Data.IsDead && output != "") FastDestroyableSingleton<HudManager>.Instance.Chat.AddChat(PlayerControl.LocalPlayer, $"{output}");
 
                 Trapper.playersOnMap = new ();
-                Snitch.playerRoomMap = new Dictionary<byte, byte>();
 
                 // Remove revealed traps
                 Trap.clearRevealedTraps();
