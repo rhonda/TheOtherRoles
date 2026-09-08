@@ -868,6 +868,7 @@ namespace TheOtherRoles {
             blockedRolePairings.Add((byte)RoleId.Vulture, new [] { (byte)RoleId.Cleaner});
             blockedRolePairings.Add((byte)RoleId.Cleaner, new [] { (byte)RoleId.Vulture});
             blockedRolePairings.Add((byte)RoleId.Lawyer, new [] { (byte)RoleId.Prosecutor});
+            blockedRolePairings.Add((byte)RoleId.Prosecutor, new [] { (byte)RoleId.Lawyer});
             
         }
     }
